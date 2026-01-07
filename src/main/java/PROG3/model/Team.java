@@ -1,14 +1,16 @@
 package PROG3.model;
 
+import PROG3.exception.NullGoalException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Team {
-    int id;
-    String name;
-    ContinentEnum continent;
-    List<Player> players;
+    private int id;
+    private String name;
+    private ContinentEnum continent;
+    private List<Player> players;
 
     public Team(int id, String name, ContinentEnum continent) {
         this.id = id;
@@ -41,7 +43,7 @@ public class Team {
     }
 
     public void setContinent(ContinentEnum continent) {
-        continent = continent;
+        this.continent = continent;
     }
 
     public List<Player> getPlayers() {
@@ -49,8 +51,28 @@ public class Team {
     }
 
     public void setPlayers(List<Player> players) {
-        players = players;
+        this.players = players;
     }
+
+    public Integer getPlayersGoals() {
+        if (this.players == null || this.players.isEmpty()) {
+            return null;
+        }
+
+        Integer total = 0;
+        for (Player p : this.getPlayers()) {
+            if (p.getGoalNb() == null) {
+                System.out.println(p.getName() + " has no goal");
+                throw new NullGoalException(
+                        "Le nombre de buts du joueur " + p.getName() +
+                                " est inconnu. Impossible de calculer le total de l'équipe."
+                );
+            }
+            total += p.getGoalNb();
+        }
+        return total;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -1,84 +1,109 @@
-package PROG3.model;
+    package PROG3.model;
 
-import java.util.Objects;
+    import java.util.Objects;
 
-public class Player {
-    int id;
-    String name;
-    int age;
-    PlayerPositionEnum position;
-    Team team;
+    public class Player {
+        private int id;
+        private String name;
+        private int age;
+        private PlayerPositionEnum position;
+        private Team team;
+        private Integer goalNb;
 
-    public Player(int id, String name, int age, PlayerPositionEnum position, Team team) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.position = position;
-        this.team = team;
-    }
-    public String getTeamName() {
-        return team.name;
-    }
-    public int getId() {
-        return id;
-    }
+        public Integer getGoalNb() {
+            if (this.goalNb != null) {
+                return goalNb;
+            } else {
+                return null;
+            }
+        }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
+        public void setGoalNb(Integer goalNb) {
+            this.goalNb = goalNb;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public Player(int id, String name, int age, PlayerPositionEnum position, Team team) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.position = position;
+            this.team = team;
+        }
+        public Player(int id, String name, int age, PlayerPositionEnum position, Integer goalNb, Team team) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.position = position;
+            this.goalNb = goalNb;
+            this.team = team;
+        }
 
-    public int getAge() {
-        return age;
-    }
+        public String getTeamName() {
+            return team != null ? team.getName() : null;
+        }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+        public int getId() {
+            return id;
+        }
 
-    public PlayerPositionEnum getPosition() {
-        return position;
-    }
+        public void setId(int id) {
+            this.id = id;
+        }
 
-    public void setPosition(PlayerPositionEnum position) {
-        position = position;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public Team getTeam() {
-        return team;
-    }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
+        public int getAge() {
+            return age;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Player player = (Player) o;
-        return id == player.id && age == player.age && Objects.equals(name, player.name) && position == player.position && Objects.equals(team, player.team);
-    }
+        public void setAge(int age) {
+            this.age = age;
+        }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, age, position, team);
-    }
+        public PlayerPositionEnum getPosition() {
+            return position;
+        }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", Position=" + position +
-                ", teamName=" + (team != null ? team.getName() : "null") +
-                '}';
+        public void setPosition(PlayerPositionEnum position) {
+            this.position = position;
+        }
+
+        public Team getTeam() {
+            return team;
+        }
+
+        public void setTeam(Team team) {
+            this.team = team;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Player player = (Player) o;
+            return id == player.id && age == player.age && Objects.equals(name, player.name) && position == player.position && Objects.equals(team, player.team);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name, age, position, team);
+        }
+
+        @Override
+        public String toString() {
+            return "Player{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", age=" + age +
+                    ", Position=" + position +
+                    ", teamName=" + (team != null ? team.getName() : "null") +
+                    ", goalNb=" + (goalNb != null ? goalNb : "null") +
+                    '}';
+        }
     }
-}

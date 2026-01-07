@@ -28,7 +28,7 @@ public class DataRetriever {
                 """;
 
         String playerQuery = """
-                SELECT id, name, age, position
+                SELECT id, name, age, position , goal_nb
                 FROM Player
                 WHERE id_team = ?
                 """;
@@ -51,11 +51,14 @@ public class DataRetriever {
                     ResultSet playerRs = playerStmt.executeQuery();
 
                     while (playerRs.next()) {
+                        Integer goalNb = playerRs.getObject("goal_nb", Integer.class);
+
                         Player player = new Player(
                                 playerRs.getInt("id"),
                                 playerRs.getString("name"),
                                 playerRs.getInt("age"),
                                 PlayerPositionEnum.valueOf(playerRs.getString("position")),
+                                goalNb,
                                 team
                         );
                         team.getPlayers().add(player);
@@ -77,7 +80,7 @@ public class DataRetriever {
         }
 
         String query = """
-            SELECT p.id, p.name, p.age, p.position,
+            SELECT p.id, p.name, p.age, p.position, p.goal_nb,
                    t.id AS team_id, t.name AS team_name, t.continent
             FROM Player p
             LEFT JOIN Team t ON p.id_team = t.id
@@ -105,12 +108,14 @@ public class DataRetriever {
                             ContinentEnum.valueOf(rs.getString("continent"))
                     );
                 }
+                Integer goalNb = rs.getObject("goal_nb", Integer.class);
 
                 Player player = new Player(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("age"),
                         PlayerPositionEnum.valueOf(rs.getString("position")),
+                        goalNb,
                         team
                 );
 
@@ -132,8 +137,8 @@ public class DataRetriever {
             connection.setAutoCommit(false);
 
             String insertQuery = """
-                INSERT INTO Player(id ,name, age, position, id_team)
-                VALUES (?,?, ?, ?, ?)
+                    INSERT INTO Player(id, name, age, position, goal_nb, id_team)
+                    VALUES (?, ?, ?, ?, ?, ?)
                 """;
 
             for (Player p : newPlayers) {
@@ -149,6 +154,11 @@ public class DataRetriever {
                     stmt.setString(2, p.getName());
                     stmt.setInt(3, p.getAge());
                     stmt.setObject(4, p.getPosition().name(), java.sql.Types.OTHER);
+                    if (p.getGoalNb() != null) {
+                        stmt.setInt(5, p.getGoalNb());
+                    } else {
+                        stmt.setNull(5, java.sql.Types.INTEGER);
+                    }
                     if (p.getTeam() != null) {
                         stmt.setInt(5, p.getTeam().getId());
                     } else {
@@ -276,7 +286,8 @@ public class DataRetriever {
         List<Player> players = new ArrayList<>();
 
         String baseQuery = """
-        SELECT p.id AS player_id, p.name AS player_name, p.age AS player_age, p.position AS player_position,
+       SELECT p.id AS player_id, p.name AS player_name, p.age AS player_age,
+               p.position AS player_position, p.goal_nb,
                t.id AS team_id, t.name AS team_name, t.continent AS team_continent
         FROM Player p
         JOIN Team t ON p.id_team = t.id
@@ -323,12 +334,14 @@ public class DataRetriever {
                         rs.getString("team_name"),
                         ContinentEnum.valueOf(rs.getString("team_continent"))
                 );
+                Integer goalNb = rs.getObject("goal_nb", Integer.class);
 
                 Player player = new Player(
                         rs.getInt("player_id"),
                         rs.getString("player_name"),
                         rs.getInt("player_age"),
                         PlayerPositionEnum.valueOf(rs.getString("player_position")),
+                        goalNb,
                         team
                 );
 

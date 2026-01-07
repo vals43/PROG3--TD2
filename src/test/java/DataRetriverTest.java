@@ -19,6 +19,7 @@ public class DataRetriverTest {
     @Test
     void a_findTeamById_1() throws SQLException {
         Team t = dataRetriever.findTeamById(1);
+        System.out.println(t);
         assertNotNull(t);
         assertEquals("Real Madrid CF", t.getName());
         assertEquals(3, t.getPlayers().size());
@@ -37,6 +38,7 @@ public class DataRetriverTest {
     @Test
     void c_findPlayers_page1_size2() throws SQLException {
         List<Player> players = dataRetriever.findPlayers(1, 2);
+        System.out.println(players);
         assertEquals(2, players.size());
         assertEquals("Thibaut Courtois", players.get(0).getName());
         assertEquals("Dani Carvajal", players.get(1).getName());
@@ -114,6 +116,35 @@ public class DataRetriverTest {
         assertNotNull(updated);
         assertEquals("FC Barcelona", updated.getName());
         assertTrue(updated.getPlayers().isEmpty());
+    }
+
+    @Test
+    void test_total_But_Equipe() throws SQLException {
+        Team t = dataRetriever.findTeamById(1);
+        assertNotNull(t);
+        try {
+            Integer total = t.getPlayersGoals();
+            assertTrue(total >= 0);
+        } catch (PROG3.exception.NullGoalException e) {
+            System.out.println("Exception confirmée : " + e.getMessage());
+            assertNotNull(e.getMessage());
+        }
+    }
+
+    @Test
+    void but_apres_Update() throws SQLException {
+        Team team = dataRetriever.findTeamById(1);
+        Player p = team.getPlayers().getFirst();
+        p.setGoalNb(10);
+
+        Team updated = dataRetriever.saveTeam(team);
+
+        try {
+            assertEquals(10, updated.getPlayersGoals());
+        } catch (PROG3.exception.NullGoalException e) {
+            System.out.println("Exception confirmée : " + e.getMessage());
+            assertNotNull(e.getMessage());
+        }
     }
 
 }

@@ -12,7 +12,27 @@ public class Main {
         try {
             db.getDBConnection();
             Team team = data.findTeamById(1);
-            System.out.println(team);
+            System.out.println("=== TEST findTeamById ===");
+            try {
+                System.out.print("Total buts équipe: ");
+                System.out.print(team.getPlayersGoals());
+            } catch (RuntimeException e) {
+                System.out.print("Erreur: " + e.getMessage());
+            }
+
+            System.out.println("\n=== TEST saveTeam ===");
+            try{
+                if (team != null) {
+                    Team saved = data.saveTeam(team);
+
+                    System.out.println("Équipe après sauvegarde : " + saved.getName());
+                    System.out.println("Total buts après sauvegarde : " + saved.getPlayersGoals());
+                }
+            } catch (RuntimeException e) {
+                System.out.print("Erreur: " + e.getMessage());
+            }
+
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
